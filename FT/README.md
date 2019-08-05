@@ -10,3 +10,4 @@ sh pre.sh
 
 python版本为python2
 脚本仅限linux运行
+positive negative文件需放在本目录
