@@ -13,9 +13,8 @@ def read_json(path):
 
 
 def save_json(path, data):
-    with open(path, 'w') as f:
-        json.dump(data, f)
-
+    with open(path, 'w', encoding='utf-8') as fout:
+        json.dump(data, fout, ensure_ascii=False, indent=4)
 
 # 过滤器从这里开始,写好函数后加入最后filters的list中
 # 输入为data,整个json文件，为dict的list,每个dict的'records'字段又为一个dict的list
