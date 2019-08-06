@@ -1,10 +1,15 @@
 import pandas as pd
 import json
 import re
+import sys
+
+if int(sys.argv[1])<0 or int(sys.argv[1])>=5:
+    print("wrong input")
+    exit()
 
 # newTable = pd.DataFrame(columns=["type","detail","other","lable","newlable","vin"])
 data = pd.read_csv(
-    "E:\\CS\\internship\\data1.csv", encoding='utf-8')
+    "../../pat_mat/data/data"+sys.argv[1]+".csv", encoding='utf-8')
 infos = []
 
 # types_delete=[]
@@ -28,6 +33,7 @@ for i in range(len(data)):
             temp['detail'] = rec['detail']
             temp['other'] = re.sub(r"[0-9a-zA-Z\- \*]+;", "", rec['other'])
             temp['label']=9
+            temp['reason'] = ' '
             # if rec['type'] in types_delete:
             #     temp['label']=0
             newinfo['records'].append(temp)
@@ -35,18 +41,17 @@ for i in range(len(data)):
 
         # newinfo['label'] = int(carinfo['label'])
         newinfo['label'] = 0
-        newinfo['reason'] = ' '
+
         jsoninfo = json.dumps(newinfo,ensure_ascii=False)
         # jsoninfo=str(newinfo)
         infos.append(jsoninfo)
     except :
         print("wrong!!! no: ",i,'\n')
 
-with open("E:\\CS\\internship\\temp1.json", 'w', encoding='utf-8') as fout:
+with open("../../pat_mat/temp/temp"+sys.argv[1]+".json", 'w', encoding='utf-8') as fout:
     fout.write('[\n')
     for i in infos[:-1]:
         i+=',\n'
         fout.write(i)
     fout.write(infos[-1]+'\n')
     fout.write(']')
-
