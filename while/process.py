@@ -38,13 +38,23 @@ def type_filter(data):
 
 
 def type_filter_new1(data):
-    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查","召回活动"]
+    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动"]
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
                 y['label'] = 0
                 y['reason'] = 'new_type过滤:' + y['type']
                 print('self added type_filter find:' + y['type'] + ' and label it:' + '0')
+    return data
+
+
+def recall_filter(data):
+    for x in data:
+        for y in x['records']:
+            if "召回" in y['type'] and y['label'] == 9:
+                y['label'] = 0
+                y['reason'] = '召回活动'
+                print('recall_filter find:' + y['type'] + ' and label it:' + '0')
     return data
 
 
