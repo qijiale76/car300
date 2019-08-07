@@ -32,6 +32,14 @@ def type_filter(data):
                 print('type_filter find:' + y['type'] + ' and label it:' + '0')
     return data
 
+def type_filter_new1(data):
+    for x in data:
+        for y in x['records']:
+            if y['type'] =='一般:客户付款' and y['label'] == 9:
+                y['label'] = 0
+                y['reason'] = 'type过滤:' + y['type']
+                print('self added type_filter find:' + y['type'] + ' and label it:' + '0')
+    return data
 
 def short_filter(data):
     # with open(r'E:\CS\Git_repo\car300\types_delete.txt', 'r', encoding='utf-8') as f:
@@ -53,7 +61,7 @@ def short_filter(data):
     return data
 
 
-filters = [type_filter, short_filter]
+filters = [type_filter, short_filter,type_filter_new1]
 
 if __name__ == '__main__':
     dat = read_json(r'data4.json')
