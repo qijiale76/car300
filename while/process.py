@@ -19,6 +19,7 @@ def save_json(path, data):
 # 过滤器从这里开始,写好函数后加入最后filters的list中
 # 输入为data,整个json文件，为dict的list,每个dict的'records'字段又为一个dict的list
 # 最后返回修改过的data
+# 写规则的时候记得加一条 y['label'] == 9 对未标定的应用这条 ***
 def type_filter(data):
     with open(r'types_delete.txt', 'r') as f:
         type_drop = [x[:-1] for x in f.readlines()]  # 可能是linux特性？直接读每行末尾有\n,故虑去最后一个字符
