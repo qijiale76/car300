@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: owhileo
 # Date: 2019-8-6
-# Version: 1.0
+# Version: 1.1
 
 import json
 
@@ -34,17 +34,26 @@ def type_filter(data):
                 y['label'] = 0
                 y['reason'] = 'type过滤:' + y['type']
                 print('type_filter find:' + y['type'] + ' and label it:' + '0')
+            if y['detail'] in type_drop and y['label'] == 9:
+                y['label'] = 0
+                y['reason'] = 'detail过滤i:' + y['detail']
+                print('detail_filter find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
 def type_filter_new1(data):
-    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修']
+    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
+                       '首保工时']
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
                 y['label'] = 0
                 y['reason'] = 'new_type过滤:' + y['type']
                 print('self added type_filter find:' + y['type'] + ' and label it:' + '0')
+            if y['detail'] in new_type_delete and y['label'] == 9:
+                y['label'] = 0
+                y['reason'] = 'new_detail过滤:' + y['detail']
+                print('self added type_filter find in detail:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
@@ -60,8 +69,6 @@ def recall_filter(data):
 
 
 def short_filter(data):
-    # with open(r'E:\CS\Git_repo\car300\types_delete.txt', 'r', encoding='utf-8') as f:
-    #     type_drop = [x[:-1] for x in f.readlines()]  # 可能是linux特性？直接读每行末尾有\n,故虑去最后一个字符
     for x in data:
         for y in x['records']:
             if y['detail'] == None:
@@ -79,10 +86,42 @@ def short_filter(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1, recall_filter]
+def fussy_match_filter(data):
+    new_type_delete = ['更换机油机滤']
+    for x in data:
+        for y in x['records']:
+            if y['type']!=None and y['label'] == 9:
+                for z in new_type_delete:
+                    if z in y['type'] and len(y['type']) <= 10:
+                        y['label'] = 0
+                        y['reason'] = '模糊 new_type过滤:' + y['type']
+                        print('self added type_filter fussy match find:' + y['type'] + ' and label it:' + '0')
+    return data
+
+
+def auto_vin_label_check(data):
+    for x in data:
+        finished = True
+        label = 0
+        for y in x['records']:
+            if y['label'] == 2 and label == 0:
+                label = 2
+            if y['label'] == 1:
+                label = 1
+            if y['label'] == 9:
+                finished = False
+                break
+        if x['label'] != label and finished:
+            x['label'] = label
+            print('auto_check find an vin label error')
+    return data
+
+
+filters = [type_filter, short_filter, type_filter_new1, recall_filter,fussy_match_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
     for i in filters:
         dat = i(dat)
+    dat = auto_vin_label_check(dat)
     save_json(save_json_path, dat)
