@@ -38,7 +38,7 @@ def type_filter(data):
 
 
 def type_filter_new1(data):
-    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动"]
+    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修']
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
@@ -51,10 +51,11 @@ def type_filter_new1(data):
 def recall_filter(data):
     for x in data:
         for y in x['records']:
-            if "召回" in y['type'] and y['label'] == 9:
-                y['label'] = 0
-                y['reason'] = '召回活动'
-                print('recall_filter find:' + y['type'] + ' and label it:' + '0')
+            if y['type'] != None:
+                if "召回" in y['type'] and y['label'] == 9:
+                    y['label'] = 0
+                    y['reason'] = '召回活动'
+                    print('recall_filter find:' + y['type'] + ' and label it:' + '0')
     return data
 
 
@@ -78,7 +79,7 @@ def short_filter(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1]
+filters = [type_filter, short_filter, type_filter_new1, recall_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
