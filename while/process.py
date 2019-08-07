@@ -24,7 +24,7 @@ def type_filter(data):
         type_drop = [x[:-1] for x in f.readlines()]  # 可能是linux特性？直接读每行末尾有\n,故虑去最后一个字符
     for x in data:
         for y in x['records']:
-            if y['type'] in type_drop and y['label'] != 0:
+            if y['type'] in type_drop and y['label'] == 9:
                 y['label'] = 0
                 y['reason'] = 'type过滤:' + y['type']
                 print('type_filter find:' + y['type'] + ' and label it:' + '0')
