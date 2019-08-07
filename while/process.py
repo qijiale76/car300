@@ -87,12 +87,12 @@ def short_filter(data):
 
 
 def fussy_match_filter(data):
-    new_type_delete = ['更换机油机滤']
+    new_type_delete = ['更换机油机滤', '更换机油、机滤']
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['label'] == 9:
                 for z in new_type_delete:
-                    if z in y['type'] and len(y['type']) <= 10:
+                    if z in y['type'] and len(y['type']) <= 15:
                         y['label'] = 0
                         y['reason'] = '模糊 new_type过滤:' + z
                         print('self added type_filter fussy match find:' + z + ' and label it:' + '0')
@@ -100,7 +100,7 @@ def fussy_match_filter(data):
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;', "公里保养;","首次保养;"]
+    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养"]
     for x in data:
         for y in x['records']:
             if y['detail'] != None and y['label'] == 9:
@@ -109,6 +109,18 @@ def fussy_detail_match_filter(data):
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + z + ' and label it:' + '0')
+    return data
+
+
+def suopei_len_filter(data):
+    new_type_delete = ['普通索赔']
+    for x in data:
+        for y in x['records']:
+            if y['type'] != None and y['detail'] != None:
+                if y['type'] in new_type_delete and len(y['detail']) <= 20 and y['label'] == 9:
+                    y['label'] = 0
+                    y['reason'] = '索赔 过滤:' + y['detail']
+                    print('索赔_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
