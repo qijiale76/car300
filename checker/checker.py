@@ -1,6 +1,6 @@
 import json, os
 
-fileName = "test.json"
+fileName = "data0.json"
 readingSave = "readingSave.txt"
 NOT_MARKED = 9
 
@@ -44,7 +44,8 @@ if __name__ == "__main__":
                 print('other:', rec['other'])
 
                 label = input()
-                if label in ['1', '2', '']: # 1 = accident, 2 = not sure, null = 0 = not accident                    
+                if label in ['1', '2', '']: # 1 = accident, 2 = not sure, null = 0 = not accident         
+                    label = int(label) if label is not '' else 0
                     rec['lebel'] = label
                     carLabel = updateLabel(label, carLabel)
 
