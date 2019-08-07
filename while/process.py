@@ -94,20 +94,20 @@ def fussy_match_filter(data):
                 for z in new_type_delete:
                     if z in y['type'] and len(y['type']) <= 10:
                         y['label'] = 0
-                        y['reason'] = '模糊 new_type过滤:' + y['type']
+                        y['reason'] = '模糊 new_type过滤:' + z
                         print('self added type_filter fussy match find:' + z + ' and label it:' + '0')
     return data
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;', "公里保养;"]
+    new_type_delete = ['公里规范常规保养;', "公里保养;","首次保养;"]
     for x in data:
         for y in x['records']:
             if y['detail'] != None and y['label'] == 9:
                 for z in new_type_delete:
                     if z in y['detail'] and len(y['detail']) <= 27:
                         y['label'] = 0
-                        y['reason'] = '模糊 new_detail过滤:' + y['type']
+                        y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + z + ' and label it:' + '0')
     return data
 
