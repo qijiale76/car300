@@ -1,12 +1,17 @@
 import json, os
 
-fileName = "data0.json"
+fileName = "test.json"
 readingSave = "readingSave.txt"
 NOT_MARKED = 9
 
 def saveJson(data):
     with open(fileName, 'w', encoding = 'utf-8') as f:
         f.write(json.dumps(data,indent=4,sort_keys=False,ensure_ascii=False))
+
+def saveHistory(index):
+    f = open('readingSave.txt', 'w')
+    f.write(str(index))
+    f.close()
 
 def updateLabel(new, ori):
     if ori == 0: return new
@@ -27,6 +32,7 @@ if __name__ == "__main__":
                 continue
             car = data[i]
             carLabel = car['label']
+            carvin = car['vin']
             carIndex = i
 
             nowRec = 0
@@ -34,20 +40,26 @@ if __name__ == "__main__":
                 os.system("cls")
                 rec = car['records'][nowRec]
                 
-                if rec['label'] is not NOT_MARKED: # filting marked record
-                    nowRec += 1
-                    continue
+                #if rec['label'] is not NOT_MARKED: # filting marked record
+                #    nowRec += 1
+                #    continue
                 
-                print("Now checking car", i, ":", nowRec, "/", len(car['records']))
+                print("Now checking car", i+1, "/", len(data), ":", nowRec+1, "/", len(car['records']))
+                print('vin:', carvin)
+                print('present car label:', carLabel)
                 print('type:', rec['type'])
                 print('detail:', rec['detail'])
                 print('other:', rec['other'])
+                if rec['label'] is not NOT_MARKED:
+                    print('reason:', rec['reason'])
 
                 label = input()
-                if label in ['1', '2', '']: # 1 = accident, 2 = not sure, null = 0 = not accident         
-                    label = int(label) if label is not '' else 0
-                    rec['lebel'] = label
-                    carLabel = updateLabel(label, carLabel)
+                if label in ['1', '2', '']: # 1 = accident, 2 = not sure, null = 0 = not accident
+                    if rec['label'] is NOT_MARKED:         
+                        label = int(label) if label is not '' else 0
+                        rec['label'] = label
+                        carLabel = updateLabel(label, carLabel)
+                    # else skip
 
                 elif label == 'r': # turn to prev rec
                     nowRec -= 2
@@ -55,15 +67,17 @@ if __name__ == "__main__":
                         nowRec = -1
 
                 elif label == 'exit': # exit the checker
-                    f = open('readingSave.txt', 'w')
-                    f.write(str(carIndex))
-                    f.close()
+                    saveHistory(carIndex)
                     exit()
+
+                else: 
+                    nowRec -= 1 # recheck this record
 
                 nowRec += 1
 
             car['label'] = carLabel
             saveJson(data)
+            saveHistory(carIndex)
             
 
 
