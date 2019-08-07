@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: owhileo
 # Date: 2019-8-6
-# Version: 1.1
+# Version: 1.2
 
 import json
 
@@ -43,7 +43,7 @@ def type_filter(data):
 
 def type_filter_new1(data):
     new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
-                       '首保工时']
+                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统']
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
@@ -90,12 +90,25 @@ def fussy_match_filter(data):
     new_type_delete = ['更换机油机滤']
     for x in data:
         for y in x['records']:
-            if y['type']!=None and y['label'] == 9:
+            if y['type'] != None and y['label'] == 9:
                 for z in new_type_delete:
                     if z in y['type'] and len(y['type']) <= 10:
                         y['label'] = 0
                         y['reason'] = '模糊 new_type过滤:' + y['type']
                         print('self added type_filter fussy match find:' + y['type'] + ' and label it:' + '0')
+    return data
+
+
+def fussy_detail_match_filter(data):
+    new_type_delete = ['公里规范常规保养;']
+    for x in data:
+        for y in x['records']:
+            if y['detail'] != None and y['label'] == 9:
+                for z in new_type_delete:
+                    if z in y['detail'] and len(y['detail']) <= 27:
+                        y['label'] = 0
+                        y['reason'] = '模糊 new_detail过滤:' + y['type']
+                        print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
@@ -117,7 +130,7 @@ def auto_vin_label_check(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1, recall_filter,fussy_match_filter]
+filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter,fussy_detail_match_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
