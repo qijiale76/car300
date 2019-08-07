@@ -22,7 +22,7 @@ def save_json(path, data):
 # 最后返回修改过的data
 # 写规则的时候记得加一条 y['label'] == 9 对未标定的应用这条 ***
 def type_filter(data):
-    with open(r'E:\CS\Git_repo\car300\types_delete.txt', 'r', encoding='utf-8') as f:
+    with open(r'types_delete.txt', 'r', encoding='utf-8') as f:
         type_drop = [x[:-1] for x in f.readlines()]  # 可能是linux特性？直接读每行末尾有\n,故虑去最后一个字符
     for x in data:
         for y in x['records']:
@@ -38,7 +38,15 @@ def short_filter(data):
     #     type_drop = [x[:-1] for x in f.readlines()]  # 可能是linux特性？直接读每行末尾有\n,故虑去最后一个字符
     for x in data:
         for y in x['records']:
-            if len(y['detail']) + len(y['other'])<15 and y['label'] == 9:
+            if y['detail'] == None:
+                a = 0
+            else:
+                a = len(y['detail'])
+            if y['other'] == None:
+                b = 0
+            else:
+                b = len(y['other'])
+            if a + b < 15 and y['label'] == 9:
                 y['label'] = 0
                 y['reason'] = 'detail和other内容少于15字过滤'
                 print('short_filter find:' + ' and label it:' + '0')
@@ -48,7 +56,7 @@ def short_filter(data):
 filters = [type_filter, short_filter]
 
 if __name__ == '__main__':
-    dat = read_json(r'E:\CS\Git_repo\car300\jzl\predata.json')
+    dat = read_json(r'data4.json')
     for i in filters:
         dat = i(dat)
-    save_json(r'E:\CS\Git_repo\car300\jzl\res1.json', dat)
+    save_json(r'data4.json', dat)
