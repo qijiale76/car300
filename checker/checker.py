@@ -13,15 +13,15 @@ def saveHistory(index):
     f.write(str(index))
     f.close()
 
-def updateLabel(new, ori):
-    if ori == 0: 
-        return new
-    elif ori == 2: 
-        if new == 0: 
-            return ori
-        else:
-            return new
-    elif ori == 1: return 1
+def updateLabel(car):
+    status = 0
+    for r in car['records']:
+        if status == 0 and r['label'] == 2:
+            status = 2
+        if r['label'] == 1:
+            status = 1
+    return status
+    
     
 
 if __name__ == "__main__":
@@ -64,17 +64,19 @@ if __name__ == "__main__":
                 print('your input:', end='')
                 label = input()
                 if label in ['1', '2', '', '0']: # 1 = accident, 2 = not sure, null = 0 = not accident
-                    label = int(label) if label is not '' else 0
-
-                    if mashineChecked:      
-                        if label != '': # forced changing machine result
-                            rec['label'] = label
-                            carLabel = label
+                    if mashineChecked: # 被机器检测过的
+                        if label != '': # 不跳过
+                            rec['label'] = int(label)
+                            carLabel = updateLabel(car)
                             rec['reason'] = ' ' # reset reason
                         # else skip
                     else: # human judge
-                        carLabel = updateLabel(label, carLabel) if rec['label'] is NOT_MARKED else label
-                        rec['label'] = label
+                        if rec['label'] == NOT_MARKED:
+                            rec['label'] = 0
+                        rec['label'] = int(label) if label is not '' else 0 
+                        carLabel = updateLabel(car)
+
+
 
                 elif label == 'r': # turn to prev rec
                     nowRec -= 1
