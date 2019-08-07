@@ -56,9 +56,10 @@ if __name__ == "__main__":
                 print('type:', rec['type'])
                 print('detail:', rec['detail'])
                 print('other:', rec['other'])
+                print('label:', rec['label'])
                 if mashineChecked: # machine checked
                     print('reason by machine:', rec['reason'])
-                    print('label by machine:', rec['label'])
+                    
 
                 print('your input:', end='')
                 label = input()
