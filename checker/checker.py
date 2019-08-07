@@ -1,6 +1,6 @@
 import json, os
 
-fileName = "test.json"
+fileName = "data0.json"
 readingSave = "readingSave.txt"
 NOT_MARKED = 9
 
@@ -14,9 +14,14 @@ def saveHistory(index):
     f.close()
 
 def updateLabel(new, ori):
-    if ori == 0: return new
-    elif ori == 2 and new > 0: return new
-    else: return 1
+    if ori == 0: 
+        return new
+    elif ori == 2: 
+        if new == 0: 
+            return ori
+        else:
+            return new
+    elif ori == 1: return 1
     
 
 if __name__ == "__main__":
@@ -39,10 +44,11 @@ if __name__ == "__main__":
             while nowRec < len(car['records']):
                 os.system("cls")
                 rec = car['records'][nowRec]
-                
-                #if rec['label'] is not NOT_MARKED: # filting marked record
-                #    nowRec += 1
-                #    continue
+                mashineChecked = rec['reason'] is not ' '
+
+                if 'type' == rec['reason'][:4]: # filting marked record
+                    nowRec += 1
+                    continue
                 
                 print("Now checking car", i+1, "/", len(data), ":", nowRec+1, "/", len(car['records']))
                 print('vin:', carvin)
@@ -50,21 +56,31 @@ if __name__ == "__main__":
                 print('type:', rec['type'])
                 print('detail:', rec['detail'])
                 print('other:', rec['other'])
-                if rec['label'] is not NOT_MARKED:
-                    print('reason:', rec['reason'])
+                if mashineChecked: # machine checked
+                    print('reason by machine:', rec['reason'])
+                    print('label by machine:', rec['label'])
 
+                print('your input:', end='')
                 label = input()
-                if label in ['1', '2', '']: # 1 = accident, 2 = not sure, null = 0 = not accident
-                    if rec['label'] is NOT_MARKED:         
-                        label = int(label) if label is not '' else 0
+                if label in ['1', '2', '', '0']: # 1 = accident, 2 = not sure, null = 0 = not accident
+                    label = int(label) if label is not '' else 0
+
+                    if mashineChecked:      
+                        if label != '': # forced changing machine result
+                            rec['label'] = label
+                            carLabel = label
+                            rec['reason'] = ' ' # reset reason
+                        # else skip
+                    else: # human judge
+                        carLabel = updateLabel(label, carLabel) if rec['label'] is NOT_MARKED else label
                         rec['label'] = label
-                        carLabel = updateLabel(label, carLabel)
-                    # else skip
 
                 elif label == 'r': # turn to prev rec
-                    nowRec -= 2
-                    if nowRec < -1: 
-                        nowRec = -1
+                    nowRec -= 1
+                    while nowRec >= -1 and car['records'][nowRec]['reason'][:4] == 'type':
+                        nowRec -= 1
+                    if nowRec != -1:
+                        nowRec -= 1
 
                 elif label == 'exit': # exit the checker
                     saveHistory(carIndex)
