@@ -43,7 +43,7 @@ def type_filter_new1(data):
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
                 y['label'] = 0
-                y['reason'] = 'type过滤:' + y['type']
+                y['reason'] = 'new_type过滤:' + y['type']
                 print('self added type_filter find:' + y['type'] + ' and label it:' + '0')
     return data
 
