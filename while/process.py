@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: owhileo
-# Date: 2019-8-6
-# Version: 1.2
+# Date: 2019-8-7
+# Version: 1.3
 
 import json
 
@@ -95,12 +95,12 @@ def fussy_match_filter(data):
                     if z in y['type'] and len(y['type']) <= 10:
                         y['label'] = 0
                         y['reason'] = '模糊 new_type过滤:' + y['type']
-                        print('self added type_filter fussy match find:' + y['type'] + ' and label it:' + '0')
+                        print('self added type_filter fussy match find:' + z + ' and label it:' + '0')
     return data
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;']
+    new_type_delete = ['公里规范常规保养;', "公里保养;"]
     for x in data:
         for y in x['records']:
             if y['detail'] != None and y['label'] == 9:
@@ -108,7 +108,23 @@ def fussy_detail_match_filter(data):
                     if z in y['detail'] and len(y['detail']) <= 27:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + y['type']
-                        print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
+                        print('self added detail_filter fussy match find:' + z + ' and label it:' + '0')
+    return data
+
+
+def type_detail_filter(data):
+    type_list = ['其他', '-', '无', '保养']
+    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查', '保养标准范围', '标准保养', '秋季保养',
+                     '秋季免检', '发动机油保养']
+    for x in data:
+        for y in x['records']:
+            if y['type'] in type_list and y['label'] == 9:
+                for z in detail_delete:
+                    if y['detail'].find(z) != -1:
+                        y['label'] = 0
+                        y['reason'] = 'type:' + y['type'] + ' 模糊detail过滤' + z
+                        print(y['type'], ' 模糊detail ', z)
+                        continue
     return data
 
 
@@ -130,7 +146,8 @@ def auto_vin_label_check(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter,fussy_detail_match_filter]
+filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
+           type_detail_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
