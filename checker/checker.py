@@ -1,7 +1,7 @@
 import json, os
 
-fileName = "data0.json"
-readingSave = "readingSave.txt"
+fileName = "C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json"
+readingSave = "C:\\Users\\DELL\\Desktop\\car300\\data\\readingSave.txt"
 NOT_MARKED = 9
 
 def saveJson(data):
@@ -9,7 +9,7 @@ def saveJson(data):
         f.write(json.dumps(data,indent=4,sort_keys=False,ensure_ascii=False))
 
 def saveHistory(index):
-    f = open('readingSave.txt', 'w')
+    f = open('C:\\Users\\DELL\\Desktop\\car300\\data\\readingSave.txt', 'w')
     f.write(str(index))
     f.close()
 
@@ -92,6 +92,7 @@ if __name__ == "__main__":
                 else: 
                     nowRec -= 1 # recheck this record
 
+                    
                 nowRec += 1
 
             car['label'] = carLabel

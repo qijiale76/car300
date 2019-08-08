@@ -5,9 +5,9 @@
 
 import json
 
-origin_json_path = r'data4.json'
-save_json_path = r'data4.json'
-type_delete_path = r'types_delete.txt'
+origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+save_json_path = "C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json"
+type_delete_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\types_delete.txt'
 
 
 def read_json(path):
@@ -42,7 +42,7 @@ def type_filter(data):
 
 
 def type_filter_new1(data):
-    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
+    new_type_delete = ['打不着火','报警灯亮','一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
                        '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统']
     for x in data:
         for y in x['records']:
