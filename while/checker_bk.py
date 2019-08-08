@@ -13,6 +13,7 @@ NOT_MARKED = 9
 high1=["纵梁","车顶","避震器","防火墙","A柱","B柱","C柱","气囊","备胎室","泡水","火烧","水泡","翼子板","后叶",'叶子板','前柱',
        '后柱','梁头','气帘','焊','切','大梁','加强件','后侧围件','中立柱','D柱','拆装','更换','校','气枕','大顶']
 
+
 def saveJson(data):
     with open(fileName, 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, indent=4, sort_keys=False, ensure_ascii=False))
