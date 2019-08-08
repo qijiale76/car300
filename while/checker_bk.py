@@ -10,8 +10,9 @@ fileName = "data4.json"
 readingSave = "readingSave.txt"
 NOT_MARKED = 9
 
-high1=["纵梁","车顶","避震器","防火墙","A柱","B柱","C柱","气囊","备胎室","泡水","火烧","水泡","翼子板","后叶",'叶子板','前柱',
-       '后柱','梁头','气帘','焊','切','大梁','加强件','后侧围件','中立柱','D柱','拆装','更换','校','气枕','大顶','减震器','钣金']
+high1 = ["纵粱", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎", "泡水", "火烧", "水泡", "后翼", "后叶", '前柱',
+         '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '拆装', '更换', '校', '气枕', '大顶', '减震器',
+         '钣金', '纵梁']
 
 
 def saveJson(data):
@@ -61,11 +62,11 @@ if __name__ == "__main__":
                 if ' ' != rec['reason']:
                     nowRec += 1
                     continue
-                det=rec['detail']
-                oth=rec['other']
+                det = rec['detail']
+                oth = rec['other']
                 for k in high1:
-                    det=det.replace(k,'\033[1;32;40m'+k+'\033[0m')
-                    oth=oth.replace(k,'\033[1;32;40m'+k+'\033[0m')
+                    det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
                 print("Now checking car", i + 1, "/", len(data), ":", nowRec + 1, "/", len(car['records']))
                 print('vin:', carvin)
                 print('present car label:', carLabel)

@@ -127,14 +127,14 @@ def fussy_detail_match_filter(data):
     new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '00公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤',
                        '更换油水分离器','免费检测','更换空气格','00保养','更换蓄电池','更换天窗','免检','更换机油','更换空调','电瓶更换','完工检测',
                        '更换水箱','冷却器更换','完工检查','换机油','四轮定位','更换左侧转向节臂','更换右侧转向节臂','免费保养','常规保养','储物盒更换',
-                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机']
+                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机','更换刹车油','清洗空调','挡泥板拆卸','PDI检测']
 
     for x in data:
         for y in x['records']:
             if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 40:
+                    if z in y['detail'] and len(y['detail']) <= 61:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
@@ -143,7 +143,9 @@ def fussy_detail_match_filter(data):
 
 def suopei_len_filter(data):
     new_type_delete = ['普通索赔', '索赔']
-
+    type_list = ['其他','其它', '-', '无', '保养','.','客户自费','内部结算','']
+    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查','保养标准范围', '标准保养范围','标准保养', '秋季保养',
+                     '秋季免检',
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
@@ -168,25 +170,6 @@ def type_detail_filter(data):
                         y['reason'] = 'type:' + y['type'] + ' 模糊detail过滤' + z
                         print(y['type'], ' 模糊detail ', z)
                         continue
-    return data
-
-
-def shigu_filter(data):
-    li = ["后叶拆装"]
-    for x in data:
-        for y in x['records']:
-            if y['type'] != None:
-                for z in li:
-                    if z in y['type'] and y['label'] == 9:
-                        y['label'] = 1
-                        y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['type'] + ' and label it:' + '1')
-            if y['detail'] != None:
-                for z in li:
-                    if z in y['detail'] and y['label'] == 9:
-                        y['label'] = 1
-                        y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['detail'] + ' and label it:' + '1')
     return data
 
 
