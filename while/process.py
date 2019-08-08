@@ -10,12 +10,16 @@ save_json_path = "data4.json"
 type_delete_path = 'types_delete.txt'
 
 
-def test(s):
+def test(s, ss):
     high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
-             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '拆装', '更换', '校']
+             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校','减震器','钣金']
     for x in high1:
-        if x in s:
-            return True
+        if s != None:
+            if x in s:
+                return True
+        if ss != None:
+            if x in ss:
+                return True
     return False
 
 
@@ -120,11 +124,14 @@ def fussy_match_filter(data):
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '000公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤、机油']
+    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '00公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤',
+                       '更换油水分离器','免费检测','更换空气格','00保养','更换蓄电池','更换天窗','免检','更换机油','更换空调','电瓶更换','完工检测',
+                       '更换水箱','冷却器更换','完工检查','换机油','四轮定位','更换左侧转向节臂','更换右侧转向节臂','免费保养','常规保养','储物盒更换',
+                       '碳罐更换','更换灯光','更换转向轴承']
 
     for x in data:
         for y in x['records']:
-            if y['detail'] != None and not test(y['detail']) and y['label'] == 9:
+            if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
                     if z in y['detail'] and len(y['detail']) <= 40:
@@ -156,7 +163,7 @@ def type_detail_filter(data):
         for y in x['records']:
             if y['type'] in type_list and y['label'] == 9:
                 for z in detail_delete:
-                    if y['detail'].find(z) != -1:
+                    if y['detail'] != None and y['detail'].find(z) != -1:
                         y['label'] = 0
                         y['reason'] = 'type:' + y['type'] + ' 模糊detail过滤' + z
                         print(y['type'], ' 模糊detail ', z)
@@ -184,7 +191,7 @@ def shigu_filter(data):
 
 
 def shigu_filter(data):
-    li = ["后叶拆装", '修复A柱']
+    li = ["后叶拆装", '修复A柱','修复B柱','修复C柱','B柱钣金','C柱钣金','A柱钣金']
     for x in data:
         for y in x['records']:
             if y['type'] != None:
@@ -224,7 +231,7 @@ def type_detail_length_filter(data):
     type_list = ['其他', '-', '无', '保养', '.']
     for x in data:
         for y in x['records']:
-            if y['label'] == 9 and y['type'] in type_list and len(y['detail']) < 30 and len(y['other']) < 30:
+            if y['label'] == 9 and y['type'] in type_list and len(y['detail']) < 20 and len(y['other']) < 20:
                 y['label'] = 0
                 y['reason'] = 'type:' + y['type'] + ' 长度过短'
                 print(y['type'], ' length too short ')
@@ -233,7 +240,7 @@ def type_detail_length_filter(data):
 
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
