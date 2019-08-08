@@ -127,14 +127,14 @@ def fussy_detail_match_filter(data):
     new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '00公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤',
                        '更换油水分离器','免费检测','更换空气格','00保养','更换蓄电池','更换天窗','免检','更换机油','更换空调','电瓶更换','完工检测',
                        '更换水箱','冷却器更换','完工检查','换机油','四轮定位','更换左侧转向节臂','更换右侧转向节臂','免费保养','常规保养','储物盒更换',
-                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机']
+                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机','更换刹车油','清洗空调','挡泥板拆卸','PDI检测']
 
     for x in data:
         for y in x['records']:
             if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 40:
+                    if z in y['detail'] and len(y['detail']) <= 61:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
