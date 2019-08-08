@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: owhileo
 # Date: 2019-8-7
-# Version: 1.7
+# Version: 2.0
 
 import json
 
@@ -12,13 +12,21 @@ type_delete_path = 'types_delete.txt'
 
 def test(s, ss):
     high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
-             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校','减震器','钣金']
+             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器','后围']
+    rep = ['翼子板(喷漆)','钣金:客户付款;','前叶','前翼']
+    a = s
+    b = ss
+    for x in rep:
+        if a != None:
+            a = a.replace(x, '')
+        if b != None:
+            b = b.replace(x, '')
     for x in high1:
-        if s != None:
-            if x in s:
+        if a != None:
+            if x in a:
                 return True
-        if ss != None:
-            if x in ss:
+        if b != None:
+            if x in b:
                 return True
     return False
 
@@ -56,7 +64,8 @@ def type_filter(data):
 
 def type_filter_new1(data):
     new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
-                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统', '更换机滤、机油;', '更换灯泡', '水箱漏水']
+                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统', '更换机滤、机油;', '更换灯泡', '水箱漏水',
+                       '年审', '附件安装']
 
     for x in data:
         for y in x['records']:
@@ -125,16 +134,20 @@ def fussy_match_filter(data):
 
 def fussy_detail_match_filter(data):
     new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '00公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤',
-                       '更换油水分离器','免费检测','更换空气格','00保养','更换蓄电池','更换天窗','免检','更换机油','更换空调','电瓶更换','完工检测',
-                       '更换水箱','冷却器更换','完工检查','换机油','四轮定位','更换左侧转向节臂','更换右侧转向节臂','免费保养','常规保养','储物盒更换',
-                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机','更换刹车油','清洗空调','挡泥板拆卸','PDI检测']
+                       '更换油水分离器', '免费检测', '更换空气格', '00保养', '更换蓄电池', '更换天窗', '免检', '更换机油', '更换空调', '电瓶更换', '完工检测',
+                       '更换水箱', '冷却器更换', '完工检查', '换机油', '四轮定位', '更换左侧转向节臂', '更换右侧转向节臂', '免费保养', '常规保养', '储物盒更换',
+                       '碳罐更换', '更换灯光', '更换转向轴承', '更换制动液', '更换压缩机', '更换刹车油', '清洗空调', '挡泥板拆卸', 'PDI检测', '汽油添加剂', '匹配钥匙',
+                       '火花塞(每只)更换', '空调清洗', '换油保养', '花粉滤清器更换', '更换杂物箱', '添加玻璃水', '更换电瓶', '更换EPS', '更换制动主泵',
+                       '更换两侧防尘套', '渗漏检查', '漏油检查', '前风挡玻璃左右外侧胶条', '拆装前杠', '免费检查', '换右后刹车', '换左后刹车', '前保险杠盖拆装',
+                       '后保险杠盖拆装', '定期保养', '更换前挡风玻璃', '更换前杠', '前杠油漆', '前杠拆装', '更换后杠', '发动机漏油', '更换前风挡玻璃', '后杠拆装',
+                       '后保更换', '后保拆装', '发动机油更换', '更换右后视镜', '更换左后视镜', '更换前挡', '密封条拆装', '滤芯拆装', 'PDS检查', '换前杠','泄露检查']
 
     for x in data:
         for y in x['records']:
             if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 61:
+                    if z in y['detail'] and len(y['detail']) <= 67:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
@@ -191,7 +204,8 @@ def shigu_filter(data):
 
 
 def shigu_filter(data):
-    li = ["后叶拆装", '修复A柱','修复B柱','修复C柱','B柱钣金','C柱钣金','A柱钣金']
+    li = ["后叶拆装", '修复A柱', '修复B柱', '修复C柱', 'B柱钣金', 'C柱钣金', 'A柱钣金', 'A柱修复', 'B柱修复', 'C柱修复', ':气囊:', ';气囊;', ';安全气囊;',
+          ';气枕;','校修右前大梁']
     for x in data:
         for y in x['records']:
             if y['type'] != None:
@@ -199,13 +213,13 @@ def shigu_filter(data):
                     if z in y['type'] and y['label'] == 9:
                         y['label'] = 1
                         y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['type'] + ' and label it:' + '1')
+                        print('shigu_filter find:' + y['type'] + '||' + y['detail'] + ' and label it:' + '1')
             if y['detail'] != None:
                 for z in li:
                     if z in y['detail'] and y['label'] == 9:
                         y['label'] = 1
                         y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['detail'] + ' and label it:' + '1')
+                        print('shigu_filter find:' + y['type'] + '||' + y['detail'] + ' and label it:' + '1')
     return data
 
 
