@@ -9,6 +9,14 @@ origin_json_path = r'data4.json'
 save_json_path = r'data4.json'
 type_delete_path = r'types_delete.txt'
 
+def test(s):
+    high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
+             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '拆装', '更换', '校']
+    for x in high1:
+        if x in s:
+            return True
+    return  False
+
 
 def read_json(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -43,7 +51,7 @@ def type_filter(data):
 
 def type_filter_new1(data):
     new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
-                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统']
+                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统', '更换机滤、机油;','更换灯泡']
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
@@ -58,13 +66,21 @@ def type_filter_new1(data):
 
 
 def recall_filter(data):
+    li = ["召回", '软件升级']
     for x in data:
         for y in x['records']:
             if y['type'] != None:
-                if "召回" in y['type'] and y['label'] == 9:
-                    y['label'] = 0
-                    y['reason'] = '召回活动'
-                    print('recall_filter find:' + y['type'] + ' and label it:' + '0')
+                for z in li:
+                    if z in y['type'] and y['label'] == 9:
+                        y['label'] = 0
+                        y['reason'] = "recall_filter" + z
+                        print('recall_filter find:' + y['type'] + ' and label it:' + '0')
+            # if y['detail'] != None:
+            #     for z in li:
+            #         if z in y['detail'] and y['label'] == 9:
+            #             y['label'] = 0
+            #             y['reason'] = "recall_filter"+z
+            #             print('recall_filter find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
@@ -100,24 +116,25 @@ def fussy_match_filter(data):
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养"]
+    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '000公里','间隔保养','更换火花塞','更换制动液','更换机滤、机油']
     for x in data:
         for y in x['records']:
-            if y['detail'] != None and y['label'] == 9:
+            if y['detail'] != None and not test(y['detail']) and y['label'] == 9:
+
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 27:
+                    if  z in y['detail'] and len(y['detail']) <= 40:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
-                        print('self added detail_filter fussy match find:' + z + ' and label it:' + '0')
+                        print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
 def suopei_len_filter(data):
-    new_type_delete = ['普通索赔']
+    new_type_delete = ['普通索赔', '索赔']
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
-                if y['type'] in new_type_delete and len(y['detail']) <= 20 and y['label'] == 9:
+                if y['type'] in new_type_delete and len(y['detail']) <= 30 and y['label'] == 9:
                     y['label'] = 0
                     y['reason'] = '索赔 过滤:' + y['detail']
                     print('索赔_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
@@ -140,6 +157,25 @@ def type_detail_filter(data):
     return data
 
 
+def shigu_filter(data):
+    li = ["后叶拆装", '修复A柱']
+    for x in data:
+        for y in x['records']:
+            if y['type'] != None:
+                for z in li:
+                    if z in y['type'] and y['label'] == 9:
+                        y['label'] = 1
+                        y['reason'] = "shigu:" + z
+                        print('shigu_filter find:' + y['type'] + ' and label it:' + '1')
+            if y['detail'] != None:
+                for z in li:
+                    if z in y['detail'] and y['label'] == 9:
+                        y['label'] = 1
+                        y['reason'] = "shigu:" + z
+                        print('shigu_filter find:' + y['detail'] + ' and label it:' + '1')
+    return data
+
+
 def auto_vin_label_check(data):
     for x in data:
         finished = True
@@ -159,7 +195,7 @@ def auto_vin_label_check(data):
 
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter,suopei_len_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
