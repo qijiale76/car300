@@ -30,5 +30,5 @@ def count(data):
 
 
 if __name__ == '__main__':
-    dat = read_json(r'data4.json')
+    dat = read_json('data4.json')
     count(dat)
