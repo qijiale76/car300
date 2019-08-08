@@ -1,2 +1,5 @@
 *.json
 *.csv
+.idea
+fine_newest.py
+*.txt
