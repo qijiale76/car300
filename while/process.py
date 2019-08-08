@@ -143,7 +143,9 @@ def fussy_detail_match_filter(data):
 
 def suopei_len_filter(data):
     new_type_delete = ['普通索赔', '索赔']
-
+    type_list = ['其他','其它', '-', '无', '保养','.','客户自费','内部结算','']
+    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查','保养标准范围', '标准保养范围','标准保养', '秋季保养',
+                     '秋季免检',
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
@@ -168,25 +170,6 @@ def type_detail_filter(data):
                         y['reason'] = 'type:' + y['type'] + ' 模糊detail过滤' + z
                         print(y['type'], ' 模糊detail ', z)
                         continue
-    return data
-
-
-def shigu_filter(data):
-    li = ["后叶拆装"]
-    for x in data:
-        for y in x['records']:
-            if y['type'] != None:
-                for z in li:
-                    if z in y['type'] and y['label'] == 9:
-                        y['label'] = 1
-                        y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['type'] + ' and label it:' + '1')
-            if y['detail'] != None:
-                for z in li:
-                    if z in y['detail'] and y['label'] == 9:
-                        y['label'] = 1
-                        y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['detail'] + ' and label it:' + '1')
     return data
 
 
