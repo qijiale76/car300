@@ -58,13 +58,21 @@ def type_filter_new1(data):
 
 
 def recall_filter(data):
+    li=["召回",'软件升级']
     for x in data:
         for y in x['records']:
             if y['type'] != None:
-                if "召回" in y['type'] and y['label'] == 9:
-                    y['label'] = 0
-                    y['reason'] = '召回活动'
-                    print('recall_filter find:' + y['type'] + ' and label it:' + '0')
+                for z in li:
+                    if z in y['type'] and y['label'] == 9:
+                        y['label'] = 0
+                        y['reason'] = "recall_filter"+z
+                        print('recall_filter find:' + y['type'] + ' and label it:' + '0')
+            # if y['detail'] != None:
+            #     for z in li:
+            #         if z in y['detail'] and y['label'] == 9:
+            #             y['label'] = 0
+            #             y['reason'] = "recall_filter"+z
+            #             print('recall_filter find:' + y['detail'] + ' and label it:' + '0')
     return data
 
 
@@ -139,6 +147,24 @@ def type_detail_filter(data):
                         continue
     return data
 
+def shigu_filter(data):
+    li=["后叶拆装"]
+    for x in data:
+        for y in x['records']:
+            if y['type'] != None:
+                for z in li:
+                    if z in y['type'] and y['label'] == 9:
+                        y['label'] = 1
+                        y['reason'] = "shigu:"+z
+                        print('shigu_filter find:' + y['type'] + ' and label it:' + '1')
+            if y['detail'] != None:
+                for z in li:
+                    if z in y['detail'] and y['label'] == 9:
+                        y['label'] = 1
+                        y['reason'] = "shigu:"+z
+                        print('shigu_filter find:' + y['detail'] + ' and label it:' + '1')
+    return data
+
 
 def auto_vin_label_check(data):
     for x in data:
@@ -159,7 +185,7 @@ def auto_vin_label_check(data):
 
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter,suopei_len_filter]
+           type_detail_filter,suopei_len_filter,shigu_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
