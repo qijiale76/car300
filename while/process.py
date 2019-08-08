@@ -5,9 +5,9 @@
 
 import json
 
-origin_json_path = r'data4.json'
-save_json_path = r'data4.json'
-type_delete_path = r'types_delete.txt'
+origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+save_json_path = "C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json"
+type_delete_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\types_delete.txt'
 
 
 def read_json(path):
@@ -43,7 +43,7 @@ def type_filter(data):
 
 def type_filter_new1(data):
     new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
-                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统','更换机滤、机油;']
+                       '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统','更换机滤','水箱漏水']
     for x in data:
         for y in x['records']:
             if y['type'] in new_type_delete and y['label'] == 9:
@@ -133,9 +133,9 @@ def suopei_len_filter(data):
 
 
 def type_detail_filter(data):
-    type_list = ['其他', '-', '无', '保养']
-    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查', '保养标准范围', '标准保养', '秋季保养',
-                     '秋季免检', '发动机油保养']
+    type_list = ['其他','其它', '-', '无', '保养','.','客户自费','内部结算']
+    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查','保养标准范围', '标准保养范围','标准保养', '秋季保养',
+                     '秋季免检', '发动机油保养','发动机保养','免费的移交检查','机油保养','润滑保养','保养套餐','保养项目','夏季关怀','春季关怀','秋季关怀','冬季关怀','真情关怀']
     for x in data:
         for y in x['records']:
             if y['type'] in type_list and y['label'] == 9:
@@ -183,10 +183,21 @@ def auto_vin_label_check(data):
             print('auto_check find an vin label error')
     return data
 
+def type_detail_length_filter(data):
+    type_list = ['其他', '-', '无', '保养','.']
+    for x in data:
+        for y in x['records']:
+            if y['label']==9 and y['type'] in type_list and len(y['detail'])<30 and len(y['other'])<30:
+                    y['label'] = 0
+                    y['reason'] = 'type:' + y['type'] + ' 长度过短'
+                    print(y['type'], ' length too short ')
+                    continue
+    return data
+
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter,suopei_len_filter,shigu_filter]
-
+           type_detail_filter,suopei_len_filter,shigu_filter,type_detail_length_filter]
+           
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
     for i in filters:
