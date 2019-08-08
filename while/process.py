@@ -108,7 +108,7 @@ def fussy_match_filter(data):
 
 
 def fussy_detail_match_filter(data):
-    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养"]
+    new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养",'000公里']
     for x in data:
         for y in x['records']:
             if y['detail'] != None and y['label'] == 9:
