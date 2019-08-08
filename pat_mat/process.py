@@ -5,8 +5,8 @@
 
 import json
 
-origin_json_path = 'data4.json'
-save_json_path = "data4.json"
+origin_json_path = 'data3.json'
+save_json_path = "data3.json"
 type_delete_path = 'types_delete.txt'
 
 
@@ -219,9 +219,20 @@ def type_detail_length_filter(data):
                 continue
     return data
 
+def no_keyword_short(data):
+    high1=["纵梁","车顶","避震器","防火墙","A柱","B柱","C柱","气囊","备胎室","泡水","火烧","水泡","翼子板","后叶",'叶子板','前柱','后柱','梁头','气帘','焊','切','大梁','加强件','后侧围件','中立柱','D柱','拆装','更换','校']
+    for x in data:
+        for y in x['records']:
+            if y['label'] == 9 and (i in y['reason'] for i in high1 or i in y['detail']for i in high1) and len(y['detail']) + len(y['other']) < 100:
+                y['label'] = 0
+                y['reason'] = '无关键词长度过短'
+                print(y['type'], 'no_keyword_short')
+                continue
+    return data
+
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,no_keyword_short]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
