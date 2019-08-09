@@ -8,12 +8,40 @@ import json
 origin_json_path = 'data4.json'
 save_json_path = "data4.json"
 type_delete_path = 'types_delete.txt'
+replace_data_path = 'replace_data.txt'
+
+replace = dict()
+# with open(replace_data_path, 'r', encoding='utf-8-sig') as f:
+#     for line in f.readlines():
+#         rule = line[:-1].replace(',', '').split('|')
+#         if len(rule) > 1:
+#             replace[rule[0]] = rule[1]
+#         else:
+#             replace[rule[0]] = ''
+
+
+# def replace_word(s):
+#     for key in replace:
+#         if key in s:
+#             s = s.replace(key, replace[key])
+#     return s
 
 
 def test(s, ss):
-    high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
-             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器','后围']
-    rep = ['翼子板(喷漆)','钣金:客户付款;','前叶','前翼']
+    high_stru = ["纵梁", "边梁", "梁头", "大梁", "纵粱", "边粱", "粱头", "大粱", "减振器座", "避振器座", "避震器座", "减震器座", "防火墙", "A柱", "B柱",
+                 "C柱",
+                 "D柱", "车顶侧围", "车门柱", "柱", "前轮旋"]
+    high_enha = ["车顶", "顶棚", "大顶", "后叶", "后翼", "下边梁", "下坎", "下槛", "下砍", "下裙", "大边", "后翅", "横梁", "后围", "后围板", "后尾板",
+                 "后侧围件",
+                 "框架"]
+    high_spec = ["气囊", "发动机"]
+    high_wate = ["进水", "排水", "污泥", "水渍", "淤泥", "泥沙"]
+    total = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']
+
+    # high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
+    #          '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器',
+    #          '后围']
+    rep = ['翼子板(喷漆)', '钣金:客户付款;', '前叶', '前翼']
     a = s
     b = ss
     for x in rep:
@@ -140,14 +168,14 @@ def fussy_detail_match_filter(data):
                        '火花塞(每只)更换', '空调清洗', '换油保养', '花粉滤清器更换', '更换杂物箱', '添加玻璃水', '更换电瓶', '更换EPS', '更换制动主泵',
                        '更换两侧防尘套', '渗漏检查', '漏油检查', '前风挡玻璃左右外侧胶条', '拆装前杠', '免费检查', '换右后刹车', '换左后刹车', '前保险杠盖拆装',
                        '后保险杠盖拆装', '定期保养', '更换前挡风玻璃', '更换前杠', '前杠油漆', '前杠拆装', '更换后杠', '发动机漏油', '更换前风挡玻璃', '后杠拆装',
-                       '后保更换', '后保拆装', '发动机油更换', '更换右后视镜', '更换左后视镜', '更换前挡', '密封条拆装', '滤芯拆装', 'PDS检查', '换前杠','泄露检查']
+                       '后保更换', '后保拆装', '发动机油更换', '更换右后视镜', '更换左后视镜', '更换前挡', '密封条拆装', '滤芯拆装', 'PDS检查', '换前杠', '泄露检查']
 
     for x in data:
         for y in x['records']:
             if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 67:
+                    if z in y['detail'] and len(y['detail']) <= 50:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
@@ -156,7 +184,7 @@ def fussy_detail_match_filter(data):
 
 def suopei_len_filter(data):
     new_type_delete = ['普通索赔', '索赔']
-    type_list = ['其他','其它', '-', '无', '保养','.','客户自费','内部结算','']
+    type_list = ['其他', '其它', '-', '无', '保养', '.', '客户自费', '内部结算', '']
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
@@ -184,18 +212,17 @@ def type_detail_filter(data):
     return data
 
 
-
 def shigu_filter(data):
     li = ["后叶拆装", '修复A柱', '修复B柱', '修复C柱', 'B柱钣金', 'C柱钣金', 'A柱钣金', 'A柱修复', 'B柱修复', 'C柱修复', ':气囊:', ';气囊;', ';安全气囊;',
-          ';气枕;','校修右前大梁']
+          ';气枕;', '校修右前大梁',';横梁;',';横梁;']
     for x in data:
         for y in x['records']:
-            if y['type'] != None:
+            if y['other'] != None:
                 for z in li:
-                    if z in y['type'] and y['label'] == 9:
+                    if z in y['other'] and y['label'] == 9:
                         y['label'] = 1
                         y['reason'] = "shigu:" + z
-                        print('shigu_filter find:' + y['type'] + '||' + y['detail'] + ' and label it:' + '1')
+                        print('shigu_filter find:' + y['type'] + '||' + y['other'] + ' and label it:' + '1')
             if y['detail'] != None:
                 for z in li:
                     if z in y['detail'] and y['label'] == 9:
