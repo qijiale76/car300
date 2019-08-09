@@ -1,6 +1,6 @@
-# version 2.0
+# version 2.2
 # date 8.9
-# time 10:36
+# time 11:04
 
 import json, os
 import platform
@@ -84,11 +84,11 @@ if __name__ == "__main__":
                     det = det.replace(k, '\033[1;33;40m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;33;40m' + k + '\033[0m')
                 for k in high_spec:
-                    det = det.replace(k, '\033[1;42;40m' + k + '\033[0m')
-                    oth = oth.replace(k, '\033[1;42;40m' + k + '\033[0m')
+                    det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
                 for k in high_wate:
-                    det = det.replace(k, '\033[1;44;40m' + k + '\033[0m')
-                    oth = oth.replace(k, '\033[1;44;40m' + k + '\033[0m')
+                    det = det.replace(k, '\033[1;34;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;34;40m' + k + '\033[0m')
                 for k in high_verb:
                     det = det.replace(k, '\033[1;35;40m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;35;40m' + k + '\033[0m')
