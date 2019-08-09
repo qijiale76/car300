@@ -7,8 +7,17 @@ import json,sys
 
 filename='C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
 
-high1=["纵梁","车顶","避震器","防火墙","A柱","B柱","C柱","气囊","备胎室","泡水","火烧","水泡","翼子板","后叶",'叶子板','前柱',
-       '后柱','梁头','气帘','焊','切','大梁','加强件','后侧围件','中立柱','D柱','拆装','更换','校', "车顶", "避震器",'减震器','钣金','后围']
+#high1=["纵梁","车顶","避震器","防火墙","A柱","B柱","C柱","气囊","备胎室","泡水","火烧","水泡","翼子板","后叶",'叶子板','前柱',
+#       '后柱','梁头','气帘','焊','切','大梁','加强件','后侧围件','中立柱','D柱','拆装','更换','校', "车顶", "避震器",'减震器','钣金','后围']
+
+
+high_stru = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋"]
+high_enha=["车顶","顶棚","大顶","后叶","后翼","下边梁","下坎","下槛","下砍","下裙","大边","后翅","横梁","后围","后围板","后尾板","后侧围件","框架"]
+high_spec=["气囊","发动机"]
+high_wate=["进水","排水","污泥","水渍","淤泥","泥沙"]
+high_verb=["切","割","焊","焊接","更换"]
+
+
 
 def read_json(path):
     with open(path, 'r',encoding='utf-8') as f:
@@ -29,11 +38,27 @@ def mark(data):
                 print("type:"+y["type"])
                 det=y["detail"]
                 oth=y["other"]
-                for k in high1:
-                    det=det.replace(k,'\033[1;32;40m'+k+'\033[0m')
-                    oth=oth.replace(k,'\033[1;32;40m'+k+'\033[0m')
+
+                for k in high_stru:
+                    det = det.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                for k in high_enha:
+                    det = det.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                for k in high_spec:
+                    det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                for k in high_wate:
+                    det = det.replace(k, '\033[1;44;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;44;40m' + k + '\033[0m')
+                for k in high_verb:
+                    det = det.replace(k, '\033[1;35;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;35;40m' + k + '\033[0m')
+
                 print("detail:"+det)
                 print("other:"+oth)
+
+
                 mylabel=input()
                 if mylabel=="":
                     mylabel=0

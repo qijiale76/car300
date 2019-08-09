@@ -4,8 +4,10 @@
 
 import json, os
 
-fileName = r"E:\CS\Git_repo\car300\jzl\myfile\res2.json"
-readingSave = r"E:\CS\Git_repo\car300\jzl\myfile\readingSave.txt"
+
+
+fileName = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+readingSave = 'C:\\Users\\DELL\\Desktop\\car300\\data\\readingSave.txt'
 NOT_MARKED = 9
 
 high_stru = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋"]
@@ -78,8 +80,8 @@ if __name__ == "__main__":
                     det = det.replace(k, '\033[1;33;40m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;33;40m' + k + '\033[0m')
                 for k in high_spec:
-                    det = det.replace(k, '\033[1;42;40m' + k + '\033[0m')
-                    oth = oth.replace(k, '\033[1;42;40m' + k + '\033[0m')
+                    det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
                 for k in high_wate:
                     det = det.replace(k, '\033[1;44;40m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;44;40m' + k + '\033[0m')
