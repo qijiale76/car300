@@ -1,19 +1,24 @@
-# -*- coding:utf-8 -*-
-# Author: ZZY
-# Date: 2019-8-8
-# Version: 2.0
-
+# version 2.0
+# date 8.9
+# time 10:36
 
 import json, os
+import platform
 
-fileName = "data4.json"
-readingSave = "readingSave.txt"
+fileName = r"data4.json"
+readingSave = r"readingSave.txt"
 NOT_MARKED = 9
 
-high1 = ["纵粱", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎", "泡水", "火烧", "水泡", "后翼", "后叶", '前柱',
-         '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '拆装', '更换', '校', '气枕', '大顶', '减震器',
-         '钣金', '纵梁','减振器']
+high_stru = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋"]
+high_enha=["车顶","顶棚","大顶","后叶","后翼","下边梁","下坎","下槛","下砍","下裙","大边","后翅","横梁","后围","后围板","后尾板","后侧围件","框架"]
+high_spec=["气囊","发动机"]
+high_wate=["进水","排水","污泥","水渍","淤泥","泥沙"]
+high_verb=["切","割","焊","焊接","更换"]
 
+__while__=True
+if __while__:
+    import jieba
+    jieba.load_userdict("d:/NJU/che300/car300/while/car_parts_all.txt")
 
 def saveJson(data):
     with open(fileName, 'w', encoding='utf-8') as f:
@@ -54,7 +59,12 @@ if __name__ == "__main__":
 
             nowRec = 0
             while nowRec < len(car['records']):
-                os.system("cls")
+                if(platform.platform()[0]=="L"):
+                    os.system("clear")
+                elif(platform.platform()[0]=="W"):
+                    os.system("cls")
+                else:
+                    print("unknown os!")
                 rec = car['records'][nowRec]
                 mashineChecked = rec['reason'] is not ' '
 
@@ -62,11 +72,31 @@ if __name__ == "__main__":
                 if ' ' != rec['reason']:
                     nowRec += 1
                     continue
-                det = rec['detail']
-                oth = rec['other']
-                for k in high1:
+
+                det = "|".join(jieba.cut(rec['detail']))
+                oth = "|".join(jieba.cut(rec['other']))
+
+                # 结构件：红色
+                # 加强件：黄色
+                # 气囊、发动机：绿色
+                # 进水：蓝色
+                # 动词：紫色
+                for k in high_stru:
+                    det = det.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                for k in high_enha:
+                    det = det.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                for k in high_spec:
                     det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
+                for k in high_wate:
+                    det = det.replace(k, '\033[1;34;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;34;40m' + k + '\033[0m')
+                for k in high_verb:
+                    det = det.replace(k, '\033[1;35;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;35;40m' + k + '\033[0m')
+
                 print("Now checking car", i + 1, "/", len(data), ":", nowRec + 1, "/", len(car['records']))
                 print('vin:', carvin)
                 print('present car label:', carLabel)
@@ -97,7 +127,7 @@ if __name__ == "__main__":
 
                 elif label == 'r':  # turn to prev rec
                     nowRec -= 1
-                    while nowRec >= -1 and car['records'][nowRec]['reason'][:4] == 'type':
+                    while nowRec >= -1 and car['records'][nowRec]['reason'] != ' ':
                         nowRec -= 1
                     if nowRec != -1:
                         nowRec -= 1
