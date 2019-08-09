@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: owhileo
 # Date: 2019-8-7
-# Version: 2.0
+# Version: 2.5
 
 import json
 
@@ -36,12 +36,17 @@ def test(s, ss):
                  "框架"]
     high_spec = ["气囊"]
     high_wate = ["进水", "排水", "污泥", "水渍", "淤泥", "泥沙"]
-    high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']
+    high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']+["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊",
+                                                                                                        "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
+             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器','后围',
+             '切割','翅','车顶','全损','事故','上边梁','气囊','纵','火烧','水泡','后围', '后围板', '侧围', '侧围板', '左侧围', '右侧围', '后侧围', '后翼子板',
+             '气囊', '气囊控制单元', '气囊传感器','车辆涉水', '水淹车', '水浸车', '水淹事故', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水','全损车','围','废','砍','槛','裙','围','柱','发动机','事故']
 
     # high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
     #          '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器',
     #          '后围']
-    rep = ['翼子板(喷漆)', '钣金:客户付款;', '前叶', '前翼']
+    rep = ['翼子板(喷漆)', '钣金:客户付款;', '前叶', '前翼','发动机机油','后叶子板整形','后叶子板修复','后叶子板喷漆','发动机盖','发动机故障灯','排水软管','发动机润滑','后叶整形','后叶喷漆','发动机油',
+           '后翼子板(喷漆)','下裙边喷漆','叶子板烤漆','立柱饰板','发动机冷却液','槛喷漆','发动机罩','发动机漏油','后叶修复','后叶补漆','发动机线路','后围整形','后围油漆','发动机皮带']
     a = s
     b = ss
     for x in rep:
@@ -214,7 +219,7 @@ def type_detail_filter(data):
 
 def shigu_filter(data):
     li = ["后叶拆装", '修复A柱', '修复B柱', '修复C柱', 'B柱钣金', 'C柱钣金', 'A柱钣金', 'A柱修复', 'B柱修复', 'C柱修复', ':气囊:', ';气囊;', ';安全气囊;',
-          ';气枕;', '校修右前大梁',';横梁;',';纵梁;','梁头钣金','发动机大修']
+          ';气枕;', '校修右前大梁',';横梁;',';纵梁;','梁头钣金','发动机大修','外门槛更换','发动机解体大修','校正大梁','梁头修复','纵梁校正']
     li += ['车辆涉水', '水淹车', '水浸车', '水淹事故', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水']
     li += ['全损车']
     li +=  ['更换后围板', '更换后尾板', '更换后侧围', '更换左侧侧围', '更换后翼子板', '后围更换', '换后翼子板',
@@ -277,9 +282,18 @@ def baoyang_filter(data):
                 continue
     return data
 
+def not_in_filter(data):
+    for x in data:
+        for y in x['records']:
+            if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9 and len(y['detail'])+len(str(y['other']))<66:
+                y['label'] = 0
+                y['reason'] = 'not in filter过滤:'
+                print('not in filter' + y['detail'] + ' and label it:' + '0')
+    return data
+
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,not_in_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
