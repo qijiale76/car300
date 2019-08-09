@@ -5,8 +5,10 @@
 import json, os
 import platform
 
-fileName = r"E:\CS\Git_repo\car300\jzl\myfile\res2.json"
-readingSave = r"E:\CS\Git_repo\car300\jzl\myfile\readingSave.txt"
+
+
+fileName = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+readingSave = 'C:\\Users\\DELL\\Desktop\\car300\\data\\readingSave.txt'
 NOT_MARKED = 9
 
 high_stru = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","前梁","前粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋",'减震包', '减震大包', '避震壳体',
