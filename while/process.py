@@ -5,9 +5,9 @@
 
 import json
 
-origin_json_path = 'data4.json'
-save_json_path = "data4.json"
-type_delete_path = 'types_delete.txt'
+origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+save_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+type_delete_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\types_delete.txt'
 
 
 def test(s, ss):
@@ -55,7 +55,7 @@ def type_filter(data):
 
 
 def type_filter_new1(data):
-    new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
+    new_type_delete = ['机油报警','一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
                        '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统', '更换机滤、机油;', '更换灯泡', '水箱漏水']
 
     for x in data:
@@ -127,7 +127,7 @@ def fussy_detail_match_filter(data):
     new_type_delete = ['公里规范常规保养;', "公里保养;", "首次保养;", "KM保养", '00公里', '间隔保养', '更换火花塞', '更换制动液', '更换机滤',
                        '更换油水分离器','免费检测','更换空气格','00保养','更换蓄电池','更换天窗','免检','更换机油','更换空调','电瓶更换','完工检测',
                        '更换水箱','冷却器更换','完工检查','换机油','四轮定位','更换左侧转向节臂','更换右侧转向节臂','免费保养','常规保养','储物盒更换',
-                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机','更换刹车油','清洗空调','挡泥板拆卸','PDI检测']
+                       '碳罐更换','更换灯光','更换转向轴承','更换制动液','更换压缩机','更换刹车油','清洗空调','空调滤芯','挡泥板拆卸','PDI检测','车辆检查']
 
     for x in data:
         for y in x['records']:
@@ -143,9 +143,6 @@ def fussy_detail_match_filter(data):
 
 def suopei_len_filter(data):
     new_type_delete = ['普通索赔', '索赔']
-    type_list = ['其他','其它', '-', '无', '保养','.','客户自费','内部结算','']
-    detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查','保养标准范围', '标准保养范围','标准保养', '秋季保养',
-                     '秋季免检',
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
@@ -160,7 +157,7 @@ def type_detail_filter(data):
     type_list = ['其他', '其它', '-', '无', '保养', '.', '客户自费', '内部结算']
     detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查', '保养标准范围', '标准保养范围', '标准保养', '秋季保养',
                      '秋季免检', '发动机油保养', '发动机保养', '免费的移交检查', '机油保养', '润滑保养', '保养套餐', '保养项目', '夏季关怀', '春季关怀', '秋季关怀',
-                     '冬季关怀', '真情关怀']
+                     '冬季关怀', '真情关怀','发动机灯报警','发动机报警','机油报警','仪表报警','报警灯亮','车辆测试']
     for x in data:
         for y in x['records']:
             if y['type'] in type_list and y['label'] == 9:
@@ -222,8 +219,8 @@ def type_detail_length_filter(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter]
+filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter,
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,fussy_detail_match_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
