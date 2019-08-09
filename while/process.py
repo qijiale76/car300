@@ -25,7 +25,7 @@ def test(s, ss):
              '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器','后围'
              ,'切割','翅','车顶','全损','事故','上边梁','气囊','纵','拆装','火烧','水泡','后围', '后围板', '侧围', '侧围板', '左侧围', '右侧围', '后侧围', '后翼子板'
              ,'气囊', '气囊控制单元', '气囊传感器','气','涉水', '水淹', '水浸', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水','全损车','围','废','门'
-             ,'分解','烘','发动机','事故','钣','拆','卸','修']
+             ,'分解','烘','发动机','事故','拆','卸']
 
     high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']+key_word2
 
@@ -128,10 +128,10 @@ def short_filter(data):
                 b = 0
             else:
                 b = len(y['other'])
-            if a + b < 15 and y['label'] == 9:
+            if a + b < 34 and y['label'] == 9:
                 y['label'] = 0
-                y['reason'] = 'detail和other内容少于15字过滤'
-                print('short_filter find:' + ' and label it:' + '0')
+                y['reason'] = 'detail和other内容少于30字过滤'
+                print('short_filter find:',y['detail']+y['other'])
     return data
 
 
@@ -256,7 +256,7 @@ def type_detail_length_filter(data):
 def none_keyword_filter(data):
     for x in data:
         for y in x['records']:
-            if not test(y['detail'],y['other']) and (len(y['detail'])+len(y['other']))<70 and y['label']==9:
+            if not test(y['detail'],y['other']) and (len(y['detail'])+len(y['other']))<120 and y['label']==9:
                 y['label'] = 0
                 y['reason'] = '未找到关键词 and 长度太短'
                 print('none keyword found and short, label it 0:'+y['detail']+''+y['other'])
