@@ -34,9 +34,9 @@ def test(s, ss):
     high_enha = ["车顶", "顶棚", "大顶", "后叶", "后翼", "下边梁", "下坎", "下槛", "下砍", "下裙", "大边", "后翅", "横梁", "后围", "后围板", "后尾板",
                  "后侧围件",
                  "框架"]
-    high_spec = ["气囊", "发动机"]
+    high_spec = ["气囊"]
     high_wate = ["进水", "排水", "污泥", "水渍", "淤泥", "泥沙"]
-    total = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']
+    high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']
 
     # high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
     #          '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器',
@@ -46,9 +46,9 @@ def test(s, ss):
     b = ss
     for x in rep:
         if a != None:
-            a = a.replace(x, '')
+            a = str(a).replace(x, '')
         if b != None:
-            b = b.replace(x, '')
+            b = str(b).replace(x, '')
     for x in high1:
         if a != None:
             if x in a:
@@ -93,7 +93,7 @@ def type_filter(data):
 def type_filter_new1(data):
     new_type_delete = ['一般:客户付款', "喷漆:客户付款", "服务节免费检查", "召回活动", "召回行动", '小修', '更换机油机滤', '更换机油机油格', '换机油', '换机油机滤',
                        '首保工时', '更换曲轴前油封', '按10000公里规范常规保养;', '换机油机滤;', '清洗空调系统', '更换机滤、机油;', '更换灯泡', '水箱漏水',
-                       '年审', '附件安装']
+                       '年审', '附件安装','索赔']
 
     for x in data:
         for y in x['records']:
@@ -175,7 +175,7 @@ def fussy_detail_match_filter(data):
             if y['detail'] != None and not test(y['detail'], y['other']) and y['label'] == 9:
 
                 for z in new_type_delete:
-                    if z in y['detail'] and len(y['detail']) <= 50:
+                    if z in y['detail'] and len(y['detail']) <= 65:
                         y['label'] = 0
                         y['reason'] = '模糊 new_detail过滤:' + z
                         print('self added detail_filter fussy match find:' + y['detail'] + ' and label it:' + '0')
@@ -214,11 +214,16 @@ def type_detail_filter(data):
 
 def shigu_filter(data):
     li = ["后叶拆装", '修复A柱', '修复B柱', '修复C柱', 'B柱钣金', 'C柱钣金', 'A柱钣金', 'A柱修复', 'B柱修复', 'C柱修复', ':气囊:', ';气囊;', ';安全气囊;',
-          ';气枕;', '校修右前大梁',';横梁;',';横梁;']
+          ';气枕;', '校修右前大梁',';横梁;',';纵梁;','梁头钣金','发动机大修']
+    li += ['车辆涉水', '水淹车', '水浸车', '水淹事故', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水']
+    li += ['全损车']
+    li +=  ['更换后围板', '更换后尾板', '更换后侧围', '更换左侧侧围', '更换后翼子板', '后围更换', '换后翼子板',
+             '更新后围板', '更新尾板', '更新后围', '前叶加强板更换', '焊接后围', '焊割左后叶', '切焊后围板',
+             '侧围焊接', '侧围更换', '切割后围', '切割后翼子板']
     for x in data:
         for y in x['records']:
             if y['other'] != None:
-                for z in li:
+                for z in li+['气枕-单元;','气枕-单元★;']:
                     if z in y['other'] and y['label'] == 9:
                         y['label'] = 1
                         y['reason'] = "shigu:" + z
@@ -261,9 +266,20 @@ def type_detail_length_filter(data):
                 continue
     return data
 
+def baoyang_filter(data):
+    type_list = ['保养']
+    for x in data:
+        for y in x['records']:
+            if y['label'] == 9 and y['detail'] !=None and type_list[0] in y['detail'] and len(y['detail']) + len(y['other']) < 100:
+                y['label'] = 0
+                y['reason'] = 'baoyang filter'
+                print(y['type'], 'baoyang fei shigu:'+y['detail'])
+                continue
+    return data
+
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
