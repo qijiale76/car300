@@ -1,14 +1,19 @@
+# version 2.0
+# date 8.9
+# time 10:36
+
 import json, os
 
 fileName = r"E:\CS\Git_repo\car300\jzl\myfile\res2.json"
 readingSave = r"E:\CS\Git_repo\car300\jzl\myfile\readingSave.txt"
 NOT_MARKED = 9
 
-high1 = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋",
-         "车顶","顶棚","大顶","后叶","后翼","下边梁","下坎","下槛","下砍","下裙","大边","后翅","横梁","后围","后围板","后尾板","后侧围件","框架",
-         "气囊","发动机",
-         "进水","排水","污泥","水渍","淤泥","泥沙",
-         "切","割","焊","焊接","更换"]
+high_stru = ["纵梁","边梁","梁头","大梁","纵粱","边粱","粱头","大粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋"]
+high_enha=["车顶","顶棚","大顶","后叶","后翼","下边梁","下坎","下槛","下砍","下裙","大边","后翅","横梁","后围","后围板","后尾板","后侧围件","框架"]
+high_spec=["气囊","发动机"]
+high_wate=["进水","排水","污泥","水渍","淤泥","泥沙"]
+high_verb=["切","割","焊","焊接","更换"]
+
 
 
 def saveJson(data):
@@ -60,9 +65,28 @@ if __name__ == "__main__":
                     continue
                 det = rec['detail']
                 oth = rec['other']
-                for k in high1:
-                    det = det.replace(k, '\033[1;32;40m' + k + '\033[0m')
-                    oth = oth.replace(k, '\033[1;32;40m' + k + '\033[0m')
+
+                # 结构件：红色
+                # 加强件：黄色
+                # 气囊、发动机：绿色
+                # 进水：蓝色
+                # 动词：紫色
+                for k in high_stru:
+                    det = det.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;31;40m' + k + '\033[0m')
+                for k in high_enha:
+                    det = det.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;33;40m' + k + '\033[0m')
+                for k in high_spec:
+                    det = det.replace(k, '\033[1;42;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;42;40m' + k + '\033[0m')
+                for k in high_wate:
+                    det = det.replace(k, '\033[1;44;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;44;40m' + k + '\033[0m')
+                for k in high_verb:
+                    det = det.replace(k, '\033[1;35;40m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;35;40m' + k + '\033[0m')
+
                 print("Now checking car", i + 1, "/", len(data), ":", nowRec + 1, "/", len(car['records']))
                 print('vin:', carvin)
                 print('present car label:', carLabel)
