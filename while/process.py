@@ -5,26 +5,10 @@
 
 import json
 
-origin_json_path = 'data4.json'
-save_json_path = "data4.json"
-type_delete_path = 'types_delete.txt'
-replace_data_path = 'replace_data.txt'
+origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+save_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+type_delete_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\types_delete.txt'
 
-replace = dict()
-# with open(replace_data_path, 'r', encoding='utf-8-sig') as f:
-#     for line in f.readlines():
-#         rule = line[:-1].replace(',', '').split('|')
-#         if len(rule) > 1:
-#             replace[rule[0]] = rule[1]
-#         else:
-#             replace[rule[0]] = ''
-
-
-# def replace_word(s):
-#     for key in replace:
-#         if key in s:
-#             s = s.replace(key, replace[key])
-#     return s
 
 
 def test(s, ss):
@@ -36,11 +20,15 @@ def test(s, ss):
                  "框架"]
     high_spec = ["气囊"]
     high_wate = ["进水", "排水", "污泥", "水渍", "淤泥", "泥沙"]
-    high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']
 
-    # high1 = ["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
-    #          '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器',
-    #          '后围']
+    key_word2=["纵梁", "车顶", "避震器", "防火墙", "A柱", "B柱", "C柱", "气囊", "备胎室", "泡水", "火烧", "水泡", "翼子板", "后叶", '叶子板', '前柱',
+             '后柱', '梁头', '气帘', '焊', '切', '大梁', '加强件', '后侧围件', '中立柱', 'D柱', '校', '减震器', '梁', '柱', '叶', '翼', '粱', '减振器','后围'
+             ,'切割','翅','车顶','全损','事故','上边梁','气囊','纵','拆装','火烧','水泡','后围', '后围板', '侧围', '侧围板', '左侧围', '右侧围', '后侧围', '后翼子板'
+             ,'气囊', '气囊控制单元', '气囊传感器','气','涉水', '水淹', '水浸', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水','全损车','围','废','门'
+             ,'分解','烘','发动机','事故','钣','拆','卸','修']
+
+    high1 = high_enha + high_spec + high_stru + high_wate+['校','梁', '柱', '叶', '翼', '粱','焊', '切','加强件']+key_word2
+
     rep = ['翼子板(喷漆)', '钣金:客户付款;', '前叶', '前翼']
     a = s
     b = ss
@@ -184,7 +172,6 @@ def fussy_detail_match_filter(data):
 
 def suopei_len_filter(data):
     new_type_delete = ['普通索赔', '索赔']
-    type_list = ['其他', '其它', '-', '无', '保养', '.', '客户自费', '内部结算', '']
     for x in data:
         for y in x['records']:
             if y['type'] != None and y['detail'] != None:
@@ -199,12 +186,13 @@ def type_detail_filter(data):
     type_list = ['其他', '其它', '-', '无', '保养', '.', '客户自费', '内部结算']
     detail_delete = ['定期保养', '冬季保养', '免费检测', '免费检查', '冬季检查', '春季保养', '春季检查', '保养标准范围', '标准保养范围', '标准保养', '秋季保养',
                      '秋季免检', '发动机油保养', '发动机保养', '免费的移交检查', '机油保养', '润滑保养', '保养套餐', '保养项目', '夏季关怀', '春季关怀', '秋季关怀',
-                     '冬季关怀', '真情关怀']
+                     '冬季关怀', '真情关怀','发动机灯报警','发动机报警','机油报警','仪表报警','报警灯亮','车辆测试']
+
     for x in data:
         for y in x['records']:
             if y['type'] in type_list and y['label'] == 9:
                 for z in detail_delete:
-                    if y['detail'] != None and y['detail'].find(z) != -1:
+                    if y['detail'] != None and y['detail'].find(z) != -1 and not test(y['detail'],y['other']):
                         y['label'] = 0
                         y['reason'] = 'type:' + y['type'] + ' 模糊detail过滤' + z
                         print(y['type'], ' 模糊detail ', z)
@@ -263,7 +251,25 @@ def type_detail_length_filter(data):
                 y['label'] = 0
                 y['reason'] = 'type:' + y['type'] + ' 长度过短'
                 print(y['type'], ' length too short ')
-                continue
+    return data
+
+def none_keyword_filter(data):
+    for x in data:
+        for y in x['records']:
+            if not test(y['detail'],y['other']) and (len(y['detail'])+len(y['other']))<70 and y['label']==9:
+                y['label'] = 0
+                y['reason'] = '未找到关键词 and 长度太短'
+                print('none keyword found and short, label it 0:'+y['detail']+''+y['other'])
+    return data
+
+#备用
+def recover(data):
+    for x in data:
+        for y in x['records']:
+           if y['reason']=='未找到关键词 and 长度太短':
+                y['label'] = 9
+                y['reason'] = ' '
+                print('recover')
     return data
 
 def baoyang_filter(data):
@@ -279,7 +285,7 @@ def baoyang_filter(data):
 
 
 filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter]
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
