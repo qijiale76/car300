@@ -3,6 +3,7 @@
 # time 10:36
 
 import json, os
+import platform
 
 fileName = r"E:\CS\Git_repo\car300\jzl\myfile\res2.json"
 readingSave = r"E:\CS\Git_repo\car300\jzl\myfile\readingSave.txt"
@@ -55,7 +56,12 @@ if __name__ == "__main__":
 
             nowRec = 0
             while nowRec < len(car['records']):
-                os.system("cls")
+                if(platform.platform()[0]=="L"):
+                    os.system("clear")
+                elif(platform.platform()[0]=="W"):
+                    os.system("cls")
+                else:
+                    print("unknown os!")
                 rec = car['records'][nowRec]
                 mashineChecked = rec['reason'] is not ' '
 
