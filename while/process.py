@@ -47,6 +47,7 @@ def test(s, ss):
     return False
 
 
+
 def read_json(path):
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -266,11 +267,11 @@ def none_keyword_filter(data):
 def recover(data):
     for x in data:
         for y in x['records']:
-           if y['label']=='保养' and y['label']!=9:
+           if y['type']=='保养' and y['label']!=9:
                if test(y['detail'],y['other']):
                     y['label'] = 9
                     y['reason'] = ' '
-                    print('recover a baoyang record')
+                    print('recover a baoyang record:',y['detail'],y['other'])
     return data
 
 
@@ -287,9 +288,9 @@ def baoyang_filter(data):
     return data
 
 
-#filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-#           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
-filters=[recover]
+filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
+           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
+#filters=[recover]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
