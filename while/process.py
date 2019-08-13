@@ -5,8 +5,8 @@
 
 import json
 
-origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
-save_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+origin_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\che300\\car300\\data_2.json'
+save_json_path = 'C:\\Users\\DELL\\Desktop\\car300\\che300\\car300\\data_2.json'
 type_delete_path = 'C:\\Users\\DELL\\Desktop\\car300\\data\\types_delete.txt'
 
 
@@ -266,11 +266,14 @@ def none_keyword_filter(data):
 def recover(data):
     for x in data:
         for y in x['records']:
-           if y['reason']=='未找到关键词 and 长度太短':
-                y['label'] = 9
-                y['reason'] = ' '
-                print('recover')
+           if y['label']=='保养' and y['label']!=9:
+               if test(y['detail'],y['other']):
+                    y['label'] = 9
+                    y['reason'] = ' '
+                    print('recover a baoyang record')
     return data
+
+
 
 def baoyang_filter(data):
     type_list = ['保养']
@@ -284,8 +287,9 @@ def baoyang_filter(data):
     return data
 
 
-filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
-           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
+#filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
+#           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
+filters=[recover]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)

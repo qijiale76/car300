@@ -30,5 +30,5 @@ def count(data):
 
 
 if __name__ == '__main__':
-    dat = read_json('C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json')
+    dat = read_json('C:\\Users\\DELL\\Desktop\\car300\\che300\\car300\\data_2.json')
     count(dat)
