@@ -19,7 +19,7 @@ def count(data):
     for x in data:
         for y in x['records']:
             summ += 1
-            if y['label'] == 0 or y['label'] == 1:
+            if y['label'] == 0 or y['label'] == 1 or y['label']==2:
                 labeled += 1
                 if y['reason'] != ' ':
                     auto_labeled += 1
