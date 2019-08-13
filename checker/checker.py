@@ -1,24 +1,26 @@
-# version 2.3
-# date 8.12
-# time 11:04
+# version 2.4
+# date 8.13
+# time 0:21
 
 import json, os
 import platform
 
-
-
-fileName = 'C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
-readingSave = 'C:\\Users\\DELL\\Desktop\\car300\\data\\readingSave.txt'
+fileName = r"E:\CS\Git_repo\car300\jzl\myfile\res3.json"
+readingSave = r"E:\CS\Git_repo\car300\jzl\myfile\readingSave.txt"
 NOT_MARKED = 9
 
-high_stru = ["纵梁","上边梁","梁头","大梁","纵粱","上边粱","粱头","大粱","前梁","前粱","减振器座", "避振器座",  "避震器座", "减震器座","防火墙", "A柱", "B柱", "C柱", "D柱","车顶侧围","车门柱","柱","前轮旋",'减震包', '减震大包', '避震壳体',
-         '避震座', '牛腿', '减震腿','减振包', '减振大包', '避振壳体',
-         '避振座', '减振腿', '悬挂系统']
-high_enha=["车顶","大顶","后叶","后翼","下边梁","下边粱","下坎","下槛","下砍","下裙","大边","后翅","横梁","后围","后围板","后尾板","后侧围件","框架"]
-high_spec=["气囊","发动机"]
-high_wate=["进水","排水","污泥","水渍","淤泥","泥沙",'车辆涉水', '水淹车', '水浸车', '水淹事故', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水']
-high_verb=["切","割","焊","焊接","更换"]
+high_stru = ['纵梁', '梁头', '大梁', '纵粱', '边粱', '粱头', '大粱', '前梁', '前粱', '防火墙', 'A柱', 'B柱', 'C柱', 'D柱', '车顶侧围', '车门柱', '柱',
+             '前轮旋', '牛腿',
+             '避震座', '避震包', '避震器座', '避震壳体', '避震大包',
+             '避振座', '避振包', '避振器座', '避振壳体', '避振大包',
+             '减震座', '减震包', '减震器座', '减震壳体', '减震大包',
+             '减振座', '减振包', '减振器座', '减振壳体', '减振大包']
+high_enha = ['边梁', '车顶', '大顶', '后叶', '后翼', '下边梁', '下坎', '下槛', '下砍', '下裙', '大边', '后翅', '后围', '后围板', '后尾板', '后侧围件', '框架',
+             '灯座', '后幅', '后墙']
 
+high_spec = ['气囊', '发动机', '气帘']
+high_wate = ['进水', '排水', '污泥', '水渍', '淤泥', '泥沙', '车辆涉水', '水淹车', '水浸车', '水淹事故', '水淹', '涉水车', '泡水车', '进水车', '车辆泡水']
+high_verb = ['焊接', '更换', '更新', '换', '切', '割', '焊']
 
 
 def saveJson(data):
@@ -27,7 +29,7 @@ def saveJson(data):
 
 
 def saveHistory(index):
-    f = open('readingSave.txt', 'w')
+    f = open(readingSave, 'w')
     f.write(str(index))
     f.close()
 
@@ -60,9 +62,9 @@ if __name__ == "__main__":
 
             nowRec = 0
             while nowRec < len(car['records']):
-                if(platform.platform()[0]=="L"):
+                if (platform.platform()[0] == "L"):
                     os.system("clear")
-                elif(platform.platform()[0]=="W"):
+                elif (platform.platform()[0] == "W"):
                     os.system("cls")
                 else:
                     print("unknown os!")
@@ -71,6 +73,7 @@ if __name__ == "__main__":
 
                 # if 'type' == rec['reason'][:4]:  # filting marked record
                 if ' ' != rec['reason']:
+                    # if rec['label']!=9:
                     nowRec += 1
                     continue
                 det = rec['detail']
