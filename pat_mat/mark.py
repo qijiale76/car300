@@ -49,8 +49,8 @@ def mark(data):
                     det = det.replace(k, '\033[1;31;48m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;31;48m' + k + '\033[0m')
                 for k in high_enha:
-                    det = det.replace(k, '\033[1;33;48m' + k + '\033[0m')
-                    oth = oth.replace(k, '\033[1;33;48m' + k + '\033[0m')
+                    det = det.replace(k, '\033[1;36;48m' + k + '\033[0m')
+                    oth = oth.replace(k, '\033[1;36;48m' + k + '\033[0m')
                 for k in high_spec:
                     det = det.replace(k, '\033[1;32;48m' + k + '\033[0m')
                     oth = oth.replace(k, '\033[1;32;48m' + k + '\033[0m')
