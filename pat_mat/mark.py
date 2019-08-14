@@ -71,13 +71,17 @@ def mark(data):
                 elif mylabel=="exit":
                     save_json(filename, data)
                     exit()
-                mylabel=int(mylabel)
-                if(mylabel<0 or mylabel >2):
-                    print("wrong label, this record passed")
-                else:
-                    y['label']=mylabel
-                    print("label "+str(mylabel)+" success.")
-                    print("")
+                try:
+                    mylabel=int(mylabel)
+                    if(mylabel<0 or mylabel >2):
+                        print("wrong label, this record passed")
+                    else:
+                        y['label']=mylabel
+                        print("label "+str(mylabel)+" success.")
+                        print("")
+                except:
+                    save_json(filename, data)
+                    exit()
 
     # #sum_s = 0
     # #labeled = 0
