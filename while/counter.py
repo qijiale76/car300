@@ -19,7 +19,7 @@ def count(data):
     for x in data:
         for y in x['records']:
             summ += 1
-            if y['label'] == 0 or y['label'] == 1:
+            if y['label'] == 0 or y['label'] == 1 or y['label']==2:
                 labeled += 1
                 if y['reason'] != ' ':
                     auto_labeled += 1
@@ -30,5 +30,5 @@ def count(data):
 
 
 if __name__ == '__main__':
-    dat = read_json('C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json')
+    dat = read_json('C:\\Users\\DELL\\Desktop\\car300\\che300\\car300\\data_2.json')
     count(dat)

@@ -5,7 +5,7 @@
 
 import json,sys
 
-filename='C:\\Users\\DELL\\Desktop\\car300\\data\\data_2.json'
+filename='C:\\Users\\DELL\\Desktop\\car300\\che300\\car300\\data_2.json'
 newfilename='C:\\Users\\DELL\\Desktop\\car300\\data\\data_2_with_2.json'
 
 
