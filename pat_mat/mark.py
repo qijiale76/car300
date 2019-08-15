@@ -105,3 +105,4 @@ if __name__ == '__main__':
         exit()
     dat = read_json(filename)
     mark(dat)
+    save_json(filename,dat)
