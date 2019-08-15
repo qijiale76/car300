@@ -426,7 +426,7 @@ def not_in_filter(data):
 
 #filters = [type_filter, short_filter, type_filter_new1, recall_filter, fussy_match_filter, fussy_detail_match_filter,
 #           type_detail_filter, suopei_len_filter, shigu_filter, type_detail_length_filter,baoyang_filter,none_keyword_filter]
-filters=[recover]
+filters=[]
 
 if __name__ == '__main__':
     dat = read_json(origin_json_path)
